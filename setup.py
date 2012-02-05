@@ -1,21 +1,27 @@
 #!/usr/bin/env python
 
 from distutils.core import setup
-import os, shutil
+import os, sys
 
-def install_lib():
-    """
-    Copies the less lib files into where lessc can read them
-    """
-    src = os.path.join('less.js', 'lib', 'less')
-    dst = os.path.join('lib', 'less')
-    try:
-        shutil.copytree(src, dst)
-    except:
-        # directory already exists, so we're good
-        pass
+data_files = []
+root_dir = os.path.dirname(__file__)
+if root_dir != '':
+    os.chdir(root_dir)
 
-install_lib()
+less_dir = os.path.join('less.js', 'lib')
+os.chdir(less_dir)
+
+# Copy the lib js files
+for dirpath, dirnames, filenames in os.walk('less'):
+    # Ignore dirnames that start with '.'
+    for i, dirname in enumerate(dirnames):
+        if dirname.startswith('.'): del dirnames[i]
+    # Add all the js files
+    for f in filenames:
+        data_files.append([dirpath, [os.path.join(dirpath, f) for f in filenames]])
+
+# Copy the binary script too
+scripts = [os.path.join('../', '../', 'less.js', 'bin', 'lessc')]
 
 setup(name='less',
     version = '1.0',
@@ -23,5 +29,6 @@ setup(name='less',
     author = 'Wil Linssen',
     url = 'http://github.com/linssen/',
     license = 'GNU GPL v3',
-    scripts = ['less.js/bin/lessc'],
+    scripts = scripts,
+    data_files = data_files,
 )
