@@ -8,11 +8,11 @@ root_dir = os.path.dirname(__file__)
 if root_dir != '':
     os.chdir(root_dir)
 
-less_dir = os.path.join('less.js', 'lib')
+less_dir = os.path.join('less.js')
 os.chdir(less_dir)
 
 # Copy the lib js files
-for dirpath, dirnames, filenames in os.walk('less'):
+for dirpath, dirnames, filenames in os.walk(os.path.join('lib', 'less')):
     # Ignore dirnames that start with '.'
     for i, dirname in enumerate(dirnames):
         if dirname.startswith('.'): del dirnames[i]
@@ -21,7 +21,7 @@ for dirpath, dirnames, filenames in os.walk('less'):
         data_files.append([dirpath, [os.path.join(dirpath, f) for f in filenames]])
 
 # Copy the binary script too
-scripts = [os.path.join('../', '../', 'less.js', 'bin', 'lessc')]
+scripts = [os.path.join('bin', 'lessc')]
 
 setup(name='less',
     version = '1.0',
